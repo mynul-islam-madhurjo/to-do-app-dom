@@ -29,13 +29,18 @@ const TodoApp = {
             const todoItem = e.target.closest('.todo-item');
             if (!todoItem) return;
 
-            // Handle delete button click
+            // Get task ID
+            const taskId = Number(todoItem.dataset.id);
+
+            // Handle different button clicks
             if (e.target.classList.contains('delete-btn')) {
-                this.deleteTask(todoItem);
-            }
-            // Handle click on todo item (toggle complete)
-            else if (e.target.classList.contains('todo-text')) {
-                this.toggleTask(todoItem);
+                this.deleteTask(taskId);
+            } else if (e.target.classList.contains('edit-btn')) {
+                this.editTask(todoItem, taskId);
+            } else if (e.target.classList.contains('save-btn')) {
+                this.saveEdit(todoItem, taskId);
+            } else if (e.target.classList.contains('checkbox')) {
+                this.toggleTask(taskId);
             }
         });
     },
@@ -59,19 +64,42 @@ const TodoApp = {
     },
 
     // Delete task
-    deleteTask(todoItem) {
-        const taskId = Number(todoItem.dataset.id);
+    deleteTask(taskId) {
         this.tasks = this.tasks.filter(task => task.id !== taskId);
         this.saveAndDisplay();
     },
 
     // Toggle task complete status
-    toggleTask(todoItem) {
-        const taskId = Number(todoItem.dataset.id);
+    toggleTask(taskId) {
         const task = this.tasks.find(task => task.id === taskId);
         if (task) {
             task.completed = !task.completed;
             this.saveAndDisplay();
+        }
+    },
+
+    // Edit task
+    editTask(todoItem, taskId) {
+        const taskText = this.tasks.find(task => task.id === taskId).text;
+        todoItem.innerHTML = `
+            <input type="checkbox" class="checkbox" ${this.tasks.find(task => task.id === taskId).completed ? 'checked' : ''}>
+            <input type="text" class="edit-input" value="${taskText}">
+            <div class="todo-buttons">
+                <button class="save-btn">Save</button>
+                <button class="delete-btn">Delete</button>
+            </div>
+        `;
+    },
+
+    // Save edited task
+    saveEdit(todoItem, taskId) {
+        const newText = todoItem.querySelector('.edit-input').value.trim();
+        if (newText) {
+            const task = this.tasks.find(task => task.id === taskId);
+            if (task) {
+                task.text = newText;
+                this.saveAndDisplay();
+            }
         }
     },
 
@@ -81,8 +109,21 @@ const TodoApp = {
         this.displayTasks();
     },
 
+    // HTML for a single todo item
+    createTodoItemHTML(task) {
+        return `
+            <input type="checkbox" class="checkbox" ${task.completed ? 'checked' : ''}>
+            <span class="todo-text">${task.text}</span>
+            <div class="todo-buttons">
+                <button class="edit-btn">Edit</button>
+                <button class="delete-btn">Delete</button>
+            </div>
+        `;
+    },
+
     // Display all tasks
     displayTasks() {
+        // Clear current list
         this.elements.list.innerHTML = '';
 
         // Create and add task elements
@@ -90,12 +131,7 @@ const TodoApp = {
             const li = document.createElement('li');
             li.className = `todo-item ${task.completed ? 'completed' : ''}`;
             li.dataset.id = task.id;
-
-            li.innerHTML = `
-                <span class="todo-text">${task.text}</span>
-                <button class="delete-btn">Delete</button>
-            `;
-
+            li.innerHTML = this.createTodoItemHTML(task);
             this.elements.list.appendChild(li);
         });
     }

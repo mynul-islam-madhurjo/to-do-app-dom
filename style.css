@@ -63,6 +63,38 @@ h1 {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 10px;
+}
+
+.todo-text {
+    flex: 1;
+    padding: 5px;
+}
+
+.edit-input {
+    flex: 1;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.todo-buttons {
+    display: flex;
+    gap: 5px;
+}
+
+.edit-btn, .save-btn {
+    background-color: #ffc107;
+    color: black;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.edit-btn:hover, .save-btn:hover {
+    background-color: #e0a800;
 }
 
 .delete-btn {
@@ -78,13 +110,13 @@ h1 {
     background-color: #cc0000;
 }
 
-.todo-item.completed {
-    background-color: #e9ecef;
+.todo-item.completed .todo-text {
     text-decoration: line-through;
     color: #6c757d;
 }
 
-.todo-text {
-    flex: 1;
+.checkbox {
+    width: 20px;
+    height: 20px;
     margin-right: 10px;
 }
