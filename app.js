@@ -24,6 +24,17 @@ const TodoApp = {
             if (e.key === 'Enter') this.addTask();
         });
 
+        // Show validation message on input
+        this.elements.input.addEventListener('invalid', (e) => {
+            e.preventDefault();
+            this.elements.input.classList.add('invalid');
+        });
+
+        // Remove validation styling when user starts typing
+        this.elements.input.addEventListener('input', () => {
+            this.elements.input.classList.remove('invalid');
+        });
+
         // List click events (for delete and toggle)
         this.elements.list.addEventListener('click', (e) => {
             const todoItem = e.target.closest('.todo-item');
@@ -48,7 +59,13 @@ const TodoApp = {
     // Add new task
     addTask() {
         const text = this.elements.input.value.trim();
-        if (!text) return;
+
+        // JavaScript validation
+        if (!text) {
+            this.elements.input.classList.add('invalid');
+            this.elements.input.focus();
+            return;
+        }
 
         // Create new task
         const task = {
@@ -61,6 +78,7 @@ const TodoApp = {
         this.tasks.push(task);
         this.saveAndDisplay();
         this.elements.input.value = '';
+        this.elements.input.classList.remove('invalid');
     },
 
     // Delete task

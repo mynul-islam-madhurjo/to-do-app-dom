@@ -120,3 +120,23 @@ h1 {
     height: 20px;
     margin-right: 10px;
 }
+
+.task-input.invalid {
+    border-color: #ff4444;
+    background-color: #fff8f8;
+}
+
+.task-input.invalid:focus {
+    outline-color: #ff4444;
+}
+
+/* Optional: Add a shake animation for invalid input */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+.task-input.invalid {
+    animation: shake 0.2s ease-in-out;
+}
